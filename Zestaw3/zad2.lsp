@@ -39,17 +39,17 @@
 	)
 ))
 
-(defun SPLIT-TYPE (TYPE SOURCE)
+(defun SPLIT-TYPE (TYPE SOURCE &optional (predicate #'<) (strpredicate #'string<) (key #'CAR))
 (funcall type
 	(sort 
 		(apply #'nconc(map 'list #'(lambda (x) (cond ((numberp x) (list x)))) source)) 
-	#'<)
+	predicate)
 	(sort 
-		(apply #'nconc(map 'list #'(lambda (x) (cond ((listp x) (list x)))) source)) 
-	#'< :key #'CAR)
+		(apply #'nconc (map 'list #'(lambda (x) (cond ((not(or(numberp x)(listp x)(arrayp x))) (list x)))) source)) 
+	strpredicate)
 	(sort 
-		(apply #'nconc (map 'list #'(lambda (x) (cond ((not(or(numberp x)(listp x))) (list x)))) source)) 
-	#'string<) 
+		(apply #'nconc(map 'list #'(lambda (x) (cond ((and(or(listp x)(arrayp x))(not(stringp x))) (list x)))) source)) 
+	#'< :key key) 
 ))
 
 (defun  RSORT (DATA FUN) 
@@ -64,20 +64,25 @@
 )
 
 (defun MSORT (DATA PREDICATE &key recursive key) 
-	(cond ((and recursive key)	
-			(append 
-				(sort (car(SPLIT-TYPE 'list DATA)) predicate) 
-				(sort 
-					(mapcar #'(lambda (x) 
-						(MSORT x predicate :recursive T :key key)
-					)(second (SPLIT-TYPE 'list DATA)))
-				predicate :key key) 
-			)
+(coerce 
+(let 
+	((splited (SPLIT-TYPE 'list DATA predicate))
+	(mkey (cond (key key) (T #'car)))
+)
+	(cond 	((>(length(car(last splited)))0)	
+	(append (car splited) (car(cdr splited)) 
+		(cond (recursive
+			(mapcar
+				#'(lambda (x) 
+					(MSORT x predicate :recursive T :key mkey)
+				)
+				(car(last splited))
+			))
+			(T (car(last splited)))
 		)
-		(recursive nil)
-		(T (append
-			(sort (car(SPLIT-TYPE 'list DATA)) predicate) 
-			(sort (second (SPLIT-TYPE 'list DATA)) predicate :key key) 
-		))
+	))
+	(T (append (car splited) (car(cdr splited))) )
 	)
+) (cond ((vectorp data)'vector)(T 'list))
+)
 )

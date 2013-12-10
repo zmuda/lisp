@@ -1,3 +1,5 @@
+;rozwiazaniom z left,right itd *nic* nie brakuje - uzywaja get'a
+
 (DEFUN LINK (R D L-R)
    (SETF (GET R L-R) D)
    (SETF (GET D 'UP) R)
@@ -16,6 +18,7 @@
 )
 (defun TO-SYMBOLS (LISTA)
 	(mapcar #'(lambda (x)
+		(putprop (car x) 'value (cdr(assoc 'value (cdr x))))
 		(link2 (car x) (cdr(assoc 'left (cdr x))) (cdr(assoc 'right (cdr x))))
 	)LISTA)
 	T
@@ -34,9 +37,12 @@
 	)
 )
 (defun COUNT-TREE(D)
-	(cond ((and (numberp (value (left d))) (numberp (value (right d))) (find (value d) (list '+ '- '* '/ )))
-		(eval (list (value d)(value (left d))(value (right d))))
-	))
+	(cond 
+		((null d) d)
+		((numberp (value d)) (value d))
+		((numberp (eval(value d))) (eval(value d)))
+		(T (eval (list (value d) (COUNT-TREE (left d)) (COUNT-TREE (right d)) )))
+	)
 )
 (defun ROUTE(D1 D2)
 	(cond

@@ -23,14 +23,14 @@
 		)
 		((= NR 3) 
 			(exa '(DO-EVEN (P 0 7)  (print (* p p))))	
-			(exa '(DO-IF (P 0 7 T (lambda (x) (+ x 3)) ) (print p)))		
+			(exa '(DO-IF (P 0 7 T #'oddp) (print p)))		
 			T
 		)
 		((= NR 4) 
-			(exa '(setq a '((0 0 0 0 0) (0 0 0 0 0) (0 0 0 0 0))))
+			(exa '(setq a (make-array '(4 3) :initial-element 0)))
 			(exa '(print2d a))
-			(exa '(print2d (fill2d a 'a )))
-			(exa '(print2d (fill2d a 'B (lambda (x) (+ x 5)))))
+			(exa '(print2d (fill2d a 'a #'oddp)))
+			(exa '(print2d (fill2d a 'B #'evenp)))
 			T	
 		)
 

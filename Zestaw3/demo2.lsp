@@ -29,10 +29,9 @@
 		((= NR 4) 
 			(exa '(split-type 'vector '(10 z a (5 6) #\q (1 a w e) (2 b) u #\d 3 6 "bee" "wolo")))
 			(exa '(split-type 'list '(10 z a (5 6) #\q (1 a w e) (2 b) u #\d 3 6 "bee" "wolo")))		
-			(exa '(rsort '(1 2 3 4 ) #'>))		
-			(exa '(rsort '(1 2 3 4 (10 11) (5 6 (7) (8)) (12 13) 9 ) #'>))
-			(exa '(msort '(1 2 3 4 (10 11) (5 6 (7) (8)) (12 13) 9 ) #'> :key #'car))		
-			(exa '(msort '(1 2 3 4 (10 11) (5 6 (7) (8)) (12 13) 9 ) #'> :recursive T :key #'car))		
+			(exa '(rsort '(1 2 3 4 (5 6) (9 10 11)) #'>))		
+			(exa '(msort '(1 2 a g (10 a 11 g) (5 6 (7 f r) (8)) (12 13) 9 ) #'> :key #'car))	
+			(exa '(msort '(1 2 a g (10 a 11 g) (5 6 (7 f r) (8)) (12 13) 9 ) #'> :key #'car :recursive T))				
 			T	
 		)
 

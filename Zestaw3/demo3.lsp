@@ -39,8 +39,7 @@
 		)
 		((= NR 3)  
 			(init)
-			(exa '(putprop 'd 'value '*))
-			(exa '(putprop 'd1 'value 3))
+			(print "D2 value was not defined")
 			(exa '(putprop 'd2 'value 2))
 			(exa '(COUNT-TREE 'd))
 			T
